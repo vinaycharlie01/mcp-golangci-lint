@@ -6,15 +6,15 @@ import (
 	"fmt"
 	"log/slog"
 
-	appanalysis "github.com/vinaycharlie01/mcp-golangci-lint/internal/application/analysis"
-	mcpadapter "github.com/vinaycharlie01/mcp-golangci-lint/internal/adapters/mcp"
 	"github.com/vinaycharlie01/mcp-golangci-lint/internal/adapters/analyzers/golangci"
 	"github.com/vinaycharlie01/mcp-golangci-lint/internal/adapters/analyzers/gosec"
 	"github.com/vinaycharlie01/mcp-golangci-lint/internal/adapters/analyzers/staticcheck"
 	"github.com/vinaycharlie01/mcp-golangci-lint/internal/adapters/cache"
 	"github.com/vinaycharlie01/mcp-golangci-lint/internal/adapters/filesystem"
+	mcpadapter "github.com/vinaycharlie01/mcp-golangci-lint/internal/adapters/mcp"
 	"github.com/vinaycharlie01/mcp-golangci-lint/internal/adapters/observability"
 	"github.com/vinaycharlie01/mcp-golangci-lint/internal/adapters/reporters"
+	appanalysis "github.com/vinaycharlie01/mcp-golangci-lint/internal/application/analysis"
 	"github.com/vinaycharlie01/mcp-golangci-lint/internal/infrastructure/config"
 	"github.com/vinaycharlie01/mcp-golangci-lint/internal/infrastructure/server"
 )

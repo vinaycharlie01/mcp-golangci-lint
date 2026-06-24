@@ -17,8 +17,8 @@ import (
 
 // HTTPServer serves health, readiness, and metrics endpoints.
 type HTTPServer struct {
-	srv     *http.Server
-	cfg     *config.ServerConfig
+	srv *http.Server
+	cfg *config.ServerConfig
 }
 
 // NewHTTPServer creates an HTTPServer with health and metrics routes.
