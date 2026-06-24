@@ -5,7 +5,9 @@ go 1.25.0
 require (
 	github.com/go-chi/chi/v5 v5.2.2
 	github.com/google/uuid v1.6.0
+	github.com/magefile/mage v1.17.2
 	github.com/mark3labs/mcp-go v0.32.0
+	github.com/nirantaraai/nava v0.0.0-20260621090652-f90eb53980f2
 	github.com/prometheus/client_golang v1.23.2
 	github.com/spf13/viper v1.19.0
 	go.opentelemetry.io/otel v1.44.0
