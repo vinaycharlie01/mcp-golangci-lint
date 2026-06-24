@@ -49,11 +49,3 @@ linters:
     unparam:
       check-exported: false
 
-issues:
-  max-issues-per-linter: 0
-  max-same-issues: 0
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - errcheck
-        - unparam
