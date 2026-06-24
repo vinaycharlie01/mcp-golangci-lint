@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mcp-golangci-lint.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "mcp-golangci-lint.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "mcp-golangci-lint.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- toYaml .Values.podAnnotations | nindent 8 }}
+      labels:
+        {{- include "mcp-golangci-lint.selectorLabels" . | nindent 8 }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: MCP_LOG_LEVEL
+              value: {{ .Values.config.log.level | quote }}
+            - name: MCP_LOG_FORMAT
+              value: {{ .Values.config.log.format | quote }}
+            - name: MCP_MCP_TRANSPORT
+              value: {{ .Values.config.mcp.transport | quote }}
+            - name: MCP_OBSERVABILITY_SERVICE_NAME
+              value: {{ .Values.config.observability.serviceName | quote }}
+            - name: MCP_OBSERVABILITY_TRACING_ENABLED
+              value: {{ .Values.config.observability.tracingEnabled | quote }}
+            - name: MCP_CACHE_ENABLED
+              value: {{ .Values.config.cache.enabled | quote }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: mcp-sse
+              containerPort: 8081
+              protocol: TCP
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}

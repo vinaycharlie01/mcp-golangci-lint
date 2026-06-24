@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mcp-golangci-lint-config
+  namespace: mcp-system
+data:
+  MCP_LOG_LEVEL: "info"
+  MCP_LOG_FORMAT: "json"
+  MCP_SERVER_ADDR: "0.0.0.0:8080"
+  MCP_MCP_SSE_ADDR: "0.0.0.0:8081"
+  MCP_OBSERVABILITY_SERVICE_NAME: "mcp-golangci-lint"
+  MCP_OBSERVABILITY_TRACING_ENABLED: "false"
+  MCP_CACHE_ENABLED: "true"

@@ -1,0 +1,16 @@
+apiVersion: v2
+name: mcp-golangci-lint
+description: Go Static Analysis MCP Server — exposes golangci-lint, staticcheck, and gosec via the Model Context Protocol
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - mcp
+  - golang
+  - static-analysis
+  - golangci-lint
+home: https://github.com/vinaycharlie01/mcp-golangci-lint
+sources:
+  - https://github.com/vinaycharlie01/mcp-golangci-lint
+maintainers:
+  - name: vinaycharlie01

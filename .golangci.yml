@@ -1,0 +1,52 @@
+run:
+  timeout: 5m
+  issues-exit-code: 1
+  tests: true
+  go: "1.25"
+
+linters:
+  disable-all: true
+  enable:
+    - govet
+    - errcheck
+    - gosimple
+    - staticcheck
+    - ineffassign
+    - unused
+    - revive
+    - gofmt
+    - goimports
+    - misspell
+    - bodyclose
+    - noctx
+    - exhaustive
+    - unconvert
+    - unparam
+    - wastedassign
+    - nolintlint
+
+linters-settings:
+  govet:
+    enable-all: true
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+  revive:
+    severity: warning
+    rules:
+      - name: exported
+      - name: var-naming
+      - name: package-comments
+  exhaustive:
+    default-signifies-exhaustive: false
+  unparam:
+    check-exported: false
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - errcheck
+        - unparam
