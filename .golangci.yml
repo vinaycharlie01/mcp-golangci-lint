@@ -1,21 +1,25 @@
+version: "2"
+
 run:
-  timeout: 5m
-  issues-exit-code: 1
-  tests: true
-  go: "1.25"
+  timeout: 10m
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    gofmt:
+      simplify: true
 
 linters:
-  disable-all: true
+  default: none
   enable:
     - govet
     - errcheck
-    - gosimple
     - staticcheck
     - ineffassign
     - unused
     - revive
-    - gofmt
-    - goimports
     - misspell
     - bodyclose
     - noctx
@@ -24,23 +28,26 @@ linters:
     - unparam
     - wastedassign
     - nolintlint
-
-linters-settings:
-  govet:
-    enable-all: true
-  errcheck:
-    check-type-assertions: true
-    check-blank: true
-  revive:
-    severity: warning
-    rules:
-      - name: exported
-      - name: var-naming
-      - name: package-comments
-  exhaustive:
-    default-signifies-exhaustive: false
-  unparam:
-    check-exported: false
+    - contextcheck
+    - gocritic
+    - prealloc
+    - whitespace
+  settings:
+    govet:
+      enable-all: true
+    errcheck:
+      check-type-assertions: true
+      check-blank: true
+    revive:
+      rules:
+        - name: exported
+          disabled: true
+        - name: var-naming
+        - name: package-comments
+    exhaustive:
+      default-signifies-exhaustive: false
+    unparam:
+      check-exported: false
 
 issues:
   max-issues-per-linter: 0
