@@ -139,7 +139,8 @@ func severityToLevel(s domainanalysis.Severity) string {
 		return "error"
 	case domainanalysis.SeverityMedium:
 		return "warning"
-	default:
+	case domainanalysis.SeverityLow, domainanalysis.SeverityInfo:
 		return "note"
 	}
+	return "note"
 }

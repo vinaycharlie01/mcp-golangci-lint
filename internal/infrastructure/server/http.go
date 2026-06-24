@@ -51,7 +51,10 @@ func (s *HTTPServer) Start(ctx context.Context) error {
 	go func() { errCh <- s.srv.ListenAndServe() }()
 	select {
 	case <-ctx.Done():
-		return s.srv.Shutdown(context.Background())
+		// ctx is already cancelled; create a fresh context for graceful drain.
+		shutdownCtx, cancel := context.WithTimeout(context.Background(), 30*time.Second) //nolint:contextcheck
+		defer cancel()
+		return s.srv.Shutdown(shutdownCtx)
 	case err := <-errCh:
 		return err
 	}

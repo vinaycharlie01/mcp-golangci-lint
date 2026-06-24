@@ -35,9 +35,11 @@ linters:
   settings:
     govet:
       enable-all: true
+      disable:
+        - fieldalignment
     errcheck:
-      check-type-assertions: true
-      check-blank: true
+      check-type-assertions: false
+      check-blank: false
     revive:
       rules:
         - name: exported

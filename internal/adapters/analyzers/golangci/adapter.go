@@ -54,8 +54,8 @@ type Adapter struct{}
 // New creates a new golangci-lint Adapter.
 func New() *Adapter { return &Adapter{} }
 
-func (a *Adapter) Name() string        { return adapterName }
-func (a *Adapter) Description() string { return adapterDesc }
+func (a *Adapter) Name() string          { return adapterName }
+func (a *Adapter) Description() string   { return adapterDesc }
 func (a *Adapter) SupportsAutoFix() bool { return true }
 
 // Run executes golangci-lint and maps its JSON output to domain findings.
@@ -111,22 +111,22 @@ func (a *Adapter) Run(ctx context.Context, req outbound.AnalysisRequest) (*domai
 // ExplainFinding returns a human-readable explanation for the given finding.
 func (a *Adapter) ExplainFinding(_ context.Context, finding domainanalysis.Finding) (string, error) {
 	explanations := map[string]string{
-		"govet":        "go vet reports suspicious constructs such as Printf calls with wrong argument types, unreachable code, and misuse of sync primitives.",
-		"errcheck":     "errcheck detects unchecked errors. Every error return value must be explicitly handled.",
-		"gosec":        "gosec inspects source code for security problems including SQL injection, command injection, and insecure crypto.",
-		"revive":       "revive is a fast, configurable, extensible linter enforcing Go coding style best practices.",
-		"ineffassign":  "ineffassign detects assignments to existing variables that are never used afterwards.",
-		"unused":       "unused checks for constants, variables, functions, and types that are declared but never used.",
-		"bodyclose":    "bodyclose checks whether HTTP response bodies are properly closed to prevent resource leaks.",
-		"noctx":        "noctx finds HTTP requests made without a context, preventing proper cancellation and timeout propagation.",
-		"exhaustive":   "exhaustive checks that switch statements on enum types handle all cases.",
-		"unconvert":    "unconvert detects unnecessary type conversions that can be removed.",
-		"unparam":      "unparam reports function parameters that always receive the same constant value.",
-		"wastedassign": "wastedassign finds statements whose assigned values are never used.",
-		"rowserrcheck": "rowserrcheck verifies that sql.Rows.Err() is checked after row iteration.",
+		"govet":         "go vet reports suspicious constructs such as Printf calls with wrong argument types, unreachable code, and misuse of sync primitives.",
+		"errcheck":      "errcheck detects unchecked errors. Every error return value must be explicitly handled.",
+		"gosec":         "gosec inspects source code for security problems including SQL injection, command injection, and insecure crypto.",
+		"revive":        "revive is a fast, configurable, extensible linter enforcing Go coding style best practices.",
+		"ineffassign":   "ineffassign detects assignments to existing variables that are never used afterwards.",
+		"unused":        "unused checks for constants, variables, functions, and types that are declared but never used.",
+		"bodyclose":     "bodyclose checks whether HTTP response bodies are properly closed to prevent resource leaks.",
+		"noctx":         "noctx finds HTTP requests made without a context, preventing proper cancellation and timeout propagation.",
+		"exhaustive":    "exhaustive checks that switch statements on enum types handle all cases.",
+		"unconvert":     "unconvert detects unnecessary type conversions that can be removed.",
+		"unparam":       "unparam reports function parameters that always receive the same constant value.",
+		"wastedassign":  "wastedassign finds statements whose assigned values are never used.",
+		"rowserrcheck":  "rowserrcheck verifies that sql.Rows.Err() is checked after row iteration.",
 		"sqlclosecheck": "sqlclosecheck verifies that sql.Rows and sql.Stmt objects are properly closed.",
-		"contextcheck": "contextcheck verifies that context is propagated correctly through function calls.",
-		"nolintlint":   "nolintlint validates that //nolint directives are properly formatted and justified.",
+		"contextcheck":  "contextcheck verifies that context is propagated correctly through function calls.",
+		"nolintlint":    "nolintlint validates that //nolint directives are properly formatted and justified.",
 	}
 	linter := finding.Analyzer
 	if linter == adapterName {

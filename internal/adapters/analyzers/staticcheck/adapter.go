@@ -46,8 +46,8 @@ type Adapter struct{}
 // New creates a new staticcheck Adapter.
 func New() *Adapter { return &Adapter{} }
 
-func (a *Adapter) Name() string         { return adapterName }
-func (a *Adapter) Description() string  { return adapterDesc }
+func (a *Adapter) Name() string          { return adapterName }
+func (a *Adapter) Description() string   { return adapterDesc }
 func (a *Adapter) SupportsAutoFix() bool { return false }
 
 // Run executes staticcheck and parses its JSONL output.

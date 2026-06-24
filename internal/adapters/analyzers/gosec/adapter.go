@@ -25,19 +25,19 @@ const (
 
 // gosecOutput is the top-level JSON structure produced by `gosec -fmt json`.
 type gosecOutput struct {
-	Issues  []gosecIssue  `json:"Issues"`
-	Metrics gosecMetrics  `json:"Metrics"`
+	Issues  []gosecIssue `json:"Issues"`
+	Metrics gosecMetrics `json:"Metrics"`
 }
 
 type gosecIssue struct {
-	Severity   string  `json:"severity"`
-	Confidence string  `json:"confidence"`
-	RuleID     string  `json:"rule_id"`
-	Details    string  `json:"details"`
-	File       string  `json:"file"`
-	Line       string  `json:"line"`
-	Column     string  `json:"column"`
-	Code       string  `json:"code"`
+	Severity   string    `json:"severity"`
+	Confidence string    `json:"confidence"`
+	RuleID     string    `json:"rule_id"`
+	Details    string    `json:"details"`
+	File       string    `json:"file"`
+	Line       string    `json:"line"`
+	Column     string    `json:"column"`
+	Code       string    `json:"code"`
 	CWE        *gosecCWE `json:"cwe"`
 }
 
@@ -171,11 +171,11 @@ func mapIssue(issue gosecIssue) domainanalysis.Finding {
 	}
 
 	return domainanalysis.Finding{
-		ID:         uuid.New().String(),
-		RuleID:     issue.RuleID,
-		Message:    issue.Details,
-		Severity:   domainanalysis.NormalizeSeverity(issue.Severity),
-		Category:   domainanalysis.CategorySecurity,
+		ID:       uuid.New().String(),
+		RuleID:   issue.RuleID,
+		Message:  issue.Details,
+		Severity: domainanalysis.NormalizeSeverity(issue.Severity),
+		Category: domainanalysis.CategorySecurity,
 		Location: domainanalysis.Location{
 			File:   issue.File,
 			Line:   line,
