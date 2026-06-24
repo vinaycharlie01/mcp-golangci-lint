@@ -324,15 +324,15 @@ func buildCacheKey(target domainanalysis.Target, opts domainanalysis.Options) st
 
 func fixGuidance(ruleID string) string {
 	guidance := map[string]string{
-		"errcheck":     "Always check returned errors. Use `if err != nil { return err }` pattern.",
-		"gosec/G104":   "Handle errors explicitly instead of using blank identifier `_`.",
-		"govet":        "Fix the type mismatch or formatting verb issue flagged by go vet.",
-		"ineffassign":  "Remove the assignment that is immediately overwritten or never used.",
-		"unused":       "Remove the exported identifier or add `//nolint:unused` with justification.",
-		"bodyclose":    "Always close HTTP response bodies with `defer resp.Body.Close()`.",
-		"noctx":        "Use `http.NewRequestWithContext` instead of `http.NewRequest`.",
-		"contextcheck": "Pass the context through to all functions that accept one.",
-		"rowserrcheck": "Always check `rows.Err()` after iterating over database rows.",
+		"errcheck":      "Always check returned errors. Use `if err != nil { return err }` pattern.",
+		"gosec/G104":    "Handle errors explicitly instead of using blank identifier `_`.",
+		"govet":         "Fix the type mismatch or formatting verb issue flagged by go vet.",
+		"ineffassign":   "Remove the assignment that is immediately overwritten or never used.",
+		"unused":        "Remove the exported identifier or add `//nolint:unused` with justification.",
+		"bodyclose":     "Always close HTTP response bodies with `defer resp.Body.Close()`.",
+		"noctx":         "Use `http.NewRequestWithContext` instead of `http.NewRequest`.",
+		"contextcheck":  "Pass the context through to all functions that accept one.",
+		"rowserrcheck":  "Always check `rows.Err()` after iterating over database rows.",
 		"sqlclosecheck": "Always close `sql.Rows` and `sql.Stmt` with defer.",
 	}
 	if g, ok := guidance[ruleID]; ok {

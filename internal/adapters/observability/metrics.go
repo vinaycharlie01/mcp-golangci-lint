@@ -23,13 +23,13 @@ type Metrics struct {
 	provider *sdkmetric.MeterProvider
 	registry *promclient.Registry
 
-	AnalysisTotal       metric.Int64Counter
-	AnalysisFailures    metric.Int64Counter
-	AnalysisDuration    metric.Float64Histogram
-	FindingsTotal       metric.Int64Counter
-	ActiveAnalyses      metric.Int64UpDownCounter
-	CacheHits           metric.Int64Counter
-	CacheMisses         metric.Int64Counter
+	AnalysisTotal    metric.Int64Counter
+	AnalysisFailures metric.Int64Counter
+	AnalysisDuration metric.Float64Histogram
+	FindingsTotal    metric.Int64Counter
+	ActiveAnalyses   metric.Int64UpDownCounter
+	CacheHits        metric.Int64Counter
+	CacheMisses      metric.Int64Counter
 }
 
 // NewMetrics initialises the OTel metric provider with a Prometheus exporter.

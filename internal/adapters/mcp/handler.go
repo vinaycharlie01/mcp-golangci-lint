@@ -124,10 +124,10 @@ func (h *Handler) ListAnalyzers(_ context.Context, _ mcp.CallToolRequest) (*mcp.
 	analyzers := h.analysisSvc.ListAnalyzers()
 
 	type analyzerInfo struct {
-		Name            string          `json:"name"`
-		Description     string          `json:"description"`
-		SupportsAutoFix bool            `json:"supports_auto_fix"`
-		RuleCount       int             `json:"rule_count"`
+		Name            string `json:"name"`
+		Description     string `json:"description"`
+		SupportsAutoFix bool   `json:"supports_auto_fix"`
+		RuleCount       int    `json:"rule_count"`
 	}
 
 	items := make([]analyzerInfo, 0, len(analyzers))
