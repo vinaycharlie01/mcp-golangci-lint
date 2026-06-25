@@ -1938,7 +1938,7 @@ func buildMermaidGraph(nodes []domainanalysis.GraphNode, edges []domainanalysis.
 		to := mermaidID(strings.TrimPrefix(e.To, moduleName+"/"))
 		fromLabel := strings.TrimPrefix(e.From, moduleName+"/")
 		toLabel := strings.TrimPrefix(e.To, moduleName+"/")
-		sb.WriteString(fmt.Sprintf("  %s[%s] --> %s[%s]\n", from, fromLabel, to, toLabel))
+		fmt.Fprintf(&sb, "  %s[%s] --> %s[%s]\n", from, fromLabel, to, toLabel)
 	}
 	_ = nodes // nodes are implicit in edges
 	return sb.String()
@@ -2060,7 +2060,7 @@ func (s *Service) GenerateCallGraph(ctx context.Context, path, packagePattern, f
 		var sb strings.Builder
 		sb.WriteString("graph TD\n")
 		for _, e := range edges {
-			sb.WriteString(fmt.Sprintf("  %s --> %s\n", e.From, e.To))
+			fmt.Fprintf(&sb, "  %s --> %s\n", e.From, e.To)
 		}
 		graph = sb.String()
 	}
