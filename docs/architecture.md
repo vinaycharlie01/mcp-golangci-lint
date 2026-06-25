@@ -15,19 +15,27 @@
 │                    Adapters Layer (Driving)                      │
 │  ┌─────────────────────────────────────────────────────────┐   │
 │  │  internal/adapters/mcp/                                  │   │
-│  │    server.go  — MCP server, transport selection          │   │
-│  │    handler.go — Tool handlers (7 MCP tools)              │   │
+│  │    server.go              — MCP server, transport        │   │
+│  │    handler.go             — Core tool handlers (7 tools) │   │
+│  │    handler_intelligence.go — Intelligence handlers       │   │
+│  │    tools.go               — Core tool schemas           │   │
+│  │    tools_intelligence.go  — Intelligence tool schemas   │   │
 │  └─────────────────────────────────────────────────────────┘   │
 └───────────────────────────────┬─────────────────────────────────┘
                                 │ calls
                                 ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                    Application Layer                             │
-│  ┌─────────────────────────────────────────────────────────┐   │
-│  │  internal/application/analysis/                          │   │
-│  │    service.go   — Use-case orchestration                 │   │
-│  │    commands.go  — Command structs (one per use case)     │   │
-│  └─────────────────────────────────────────────────────────┘   │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  internal/application/analysis/                           │  │
+│  │    service.go   — Use-case orchestration                  │  │
+│  │    commands.go  — Command structs (one per use case)      │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │  internal/application/intelligence/                       │  │
+│  │    service.go   — 18 AI-native intelligence tools         │  │
+│  │                   (AST, git, complexity, security, ...)   │  │
+│  └──────────────────────────────────────────────────────────┘  │
 └──────┬────────────────────────────────────────────┬────────────┘
        │ uses Domain types                          │ calls via Ports
        ▼                                            ▼
@@ -37,8 +45,8 @@
 │    finding.go        │         │    analyzer.go  — Analyzer port  │
 │    result.go         │         │    cache.go     — Cache port     │
 │    target.go         │         │    filesystem.go — FS port       │
-└──────────────────────┘         │    reporter.go  — Reporter port  │
-                                 └───────────────┬─────────────────┘
+│    extended.go       │         │    reporter.go  — Reporter port  │
+└──────────────────────┘         └───────────────┬─────────────────┘
                                                  │ implemented by
                                                  ▼
 ┌─────────────────────────────────────────────────────────────────┐
@@ -84,6 +92,8 @@ svc.RegisterAnalyzer(myanalyzer.New())
 
 ## MCP Tools
 
+### Core Static Analysis (7 tools)
+
 | Tool | Description |
 |------|-------------|
 | `analyze_repository` | Run all/selected analyzers against a Go module |
@@ -93,6 +103,29 @@ svc.RegisterAnalyzer(myanalyzer.New())
 | `explain_finding` | Detailed explanation of a rule/finding |
 | `suggest_fix` | Auto-fix command or manual remediation steps |
 | `generate_golangci_config` | Generate a `.golangci.yml` configuration |
+
+### AI-Native Intelligence (18 tools)
+
+| Tool | Description |
+|------|-------------|
+| `review_repository` | Full repo review: ranked issues, priority fixes, health score |
+| `analyze_git_diff` | Lint-aware diff analysis for changed lines only |
+| `review_pull_request` | PR-scoped review with risk assessment |
+| `generate_fix_patches` | Unified diff patches for auto-fixable findings |
+| `scan_dependency_health` | Outdated, deprecated, and CVE-risk dependencies |
+| `detect_architectural_smells` | Circular imports, god files, coupling violations |
+| `generate_complexity_report` | Cyclomatic complexity per function/file |
+| `find_dead_code` | Unused exports, unreachable functions |
+| `detect_performance_issues` | Alloc hot spots, inefficient loops |
+| `detect_concurrency_issues` | Race-prone patterns, unprotected shared state |
+| `detect_api_breaking_changes` | Removed/changed exported signatures vs base ref |
+| `generate_security_audit` | Cross-cutting security analysis |
+| `get_repository_health_score` | 0–100 composite health score |
+| `get_repository_fingerprint` | Tech-stack fingerprint: frameworks, build tooling |
+| `generate_knowledge_graph` | Package dependency graph as nodes/edges |
+| `generate_call_graph` | Function-level call graph for a target package |
+| `analyze_impact` | What breaks if this file/function changes? |
+| `ask_repository` | Natural-language Q&A about codebase structure |
 
 ## Output Formats
 

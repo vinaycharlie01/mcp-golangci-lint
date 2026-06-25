@@ -1,6 +1,6 @@
 apiVersion: v2
 name: mcp-golangci-lint
-description: Go Static Analysis MCP Server — exposes golangci-lint, staticcheck, and gosec via the Model Context Protocol
+description: Go Static Analysis MCP Server — exposes golangci-lint, staticcheck, gosec, and AI-native intelligence tools via the Model Context Protocol
 type: application
 version: 0.1.0
 appVersion: "1.0.0"

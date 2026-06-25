@@ -1,10 +1,11 @@
 # mcp-golangci-lint
 
-A production-grade **Go Static Analysis MCP Server** that exposes `golangci-lint`, `staticcheck`, and `gosec` to AI agents via the [Model Context Protocol](https://modelcontextprotocol.io).
+A production-grade **Go Static Analysis MCP Server** that exposes `golangci-lint`, `staticcheck`, and `gosec`
+— plus an AI-native intelligence layer — to AI agents via the [Model Context Protocol](https://modelcontextprotocol.io).
 
 ## Features
 
-- **7 MCP Tools**: analyze repository, analyze file, run golangci-lint, list analyzers, explain finding, suggest fix, generate config
+- **25 MCP Tools**: 7 core static-analysis tools + 18 AI-native intelligence tools
 - **3 Analyzers**: golangci-lint (100+ linters), staticcheck (SA/S/QF rules), gosec (security rules)
 - **3 Output Formats**: JSON, Markdown, SARIF 2.1.0 (GitHub Code Scanning compatible)
 - **Hexagonal Architecture**: clean separation of domain, application, and infrastructure layers
@@ -42,6 +43,8 @@ make build
 
 ## MCP Tools
 
+### Core Static Analysis (7 tools)
+
 | Tool | Description |
 |------|-------------|
 | `analyze_repository` | Run all/selected analyzers against a Go module |
@@ -51,6 +54,29 @@ make build
 | `explain_finding` | Detailed explanation of any rule/finding |
 | `suggest_fix` | Auto-fix command or manual remediation steps |
 | `generate_golangci_config` | Generate a ready-to-use `.golangci.yml` |
+
+### AI-Native Intelligence (18 tools)
+
+| Tool | Description |
+|------|-------------|
+| `review_repository` | Full repo review: ranked issues, priority fixes, health score |
+| `analyze_git_diff` | Lint-aware diff analysis — only findings in changed lines |
+| `review_pull_request` | PR-scoped review with risk assessment |
+| `generate_fix_patches` | Generate unified diff patches for auto-fixable findings |
+| `scan_dependency_health` | Outdated, deprecated, and CVE-risk dependencies |
+| `detect_architectural_smells` | Circular imports, god files, god packages, coupling violations |
+| `generate_complexity_report` | Cyclomatic complexity per function/file, threshold violations |
+| `find_dead_code` | Unused exports, unreachable functions, stale test helpers |
+| `detect_performance_issues` | Alloc hot spots, inefficient loops, string builder opportunities |
+| `detect_concurrency_issues` | Race-prone patterns: shared state, unprotected map writes, WaitGroup misuse |
+| `detect_api_breaking_changes` | Removed/changed exported signatures vs a base ref |
+| `generate_security_audit` | Cross-cutting security analysis beyond gosec rule flags |
+| `get_repository_health_score` | 0–100 composite score across lint, complexity, coverage, deps |
+| `get_repository_fingerprint` | Tech-stack fingerprint: language mix, frameworks, build tooling |
+| `generate_knowledge_graph` | Package dependency graph as nodes/edges JSON |
+| `generate_call_graph` | Function-level call graph for a target package |
+| `analyze_impact` | What would break if this file/function changes? |
+| `ask_repository` | Natural-language Q&A about codebase structure and quality |
 
 ## Client Configuration
 
@@ -105,11 +131,12 @@ Built with **Hexagonal Architecture** (Ports and Adapters):
 Domain (zero deps) → Ports (interfaces) → Application (use cases) → Adapters (implementations)
 ```
 
-- `internal/domain/analysis/` — pure Go domain types
+- `internal/domain/analysis/` — pure Go domain types (findings, severity, results, extended types)
 - `internal/ports/outbound/` — Analyzer, Cache, FileSystem, Reporter interfaces
-- `internal/application/analysis/` — use case orchestration (Service)
+- `internal/application/analysis/` — core use case orchestration (Service)
+- `internal/application/intelligence/` — AI-native intelligence service (18 advanced tools)
 - `internal/adapters/` — golangci-lint, staticcheck, gosec, memory cache, local fs, JSON/MD/SARIF reporters
-- `internal/adapters/mcp/` — MCP server and tool handlers
+- `internal/adapters/mcp/` — MCP server, core tool handlers, intelligence tool handlers
 - `internal/infrastructure/` — config (viper), HTTP health/metrics server
 - `internal/bootstrap/` — dependency injection wiring
 - `pkg/` — logger (slog), executor (safe command runner), version
