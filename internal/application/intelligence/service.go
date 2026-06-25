@@ -129,7 +129,7 @@ func (s *Service) ReviewRepository(ctx context.Context, path string) (*ReviewRep
 		count    int
 		msg      string
 	}
-	var ranked []ruleKey
+	ranked := make([]ruleKey, 0, len(ruleCounts))
 	for ruleID, entry := range ruleCounts {
 		ranked = append(ranked, ruleKey{ruleID, entry.severity, entry.count, entry.message})
 	}
@@ -141,7 +141,11 @@ func (s *Service) ReviewRepository(ctx context.Context, path string) (*ReviewRep
 		}
 		return ranked[i].count > ranked[j].count
 	})
-	var priorityFixes []PriorityFix
+	maxFixes := len(ranked)
+	if maxFixes > 10 {
+		maxFixes = 10
+	}
+	priorityFixes := make([]PriorityFix, 0, maxFixes)
 	for i, r := range ranked {
 		if i >= 10 {
 			break
@@ -267,7 +271,7 @@ func (s *Service) ReviewPullRequest(ctx context.Context, path, baseBranch, headB
 		switch f.Severity {
 		case domainanalysis.SeverityCritical, domainanalysis.SeverityHigh:
 			blocking = append(blocking, f)
-		default:
+		case domainanalysis.SeverityMedium, domainanalysis.SeverityLow, domainanalysis.SeverityInfo:
 			warnings = append(warnings, f)
 		}
 		if f.Category == domainanalysis.CategorySecurity {
@@ -721,14 +725,18 @@ func (s *Service) GenerateComplexityReport(ctx context.Context, path string, top
 		name  string
 		comps []int
 	}
-	var fileList []fileStats
+	fileList := make([]fileStats, 0, len(fileMap))
 	for name, comps := range fileMap {
 		fileList = append(fileList, fileStats{name, comps})
 	}
 	sort.Slice(fileList, func(i, j int) bool {
 		return avgInt(fileList[i].comps) > avgInt(fileList[j].comps)
 	})
-	var topFiles []domainanalysis.FileComplexity
+	maxTopFiles := len(fileList)
+	if maxTopFiles > topN {
+		maxTopFiles = topN
+	}
+	topFiles := make([]domainanalysis.FileComplexity, 0, maxTopFiles)
 	for i, fs := range fileList {
 		if i >= topN {
 			break
@@ -1035,10 +1043,9 @@ func isStringByteConversion(call *ast.CallExpr) bool {
 	if len(call.Args) != 1 {
 		return false
 	}
-	// Check if arg is a slice type
-	switch call.Args[0].(type) {
-	case *ast.CallExpr:
-		return false // e.g. string(someFunc())
+	// Return false for string(someFunc()) — that's a function call, not a byte-slice conversion
+	if _, ok := call.Args[0].(*ast.CallExpr); ok {
+		return false
 	}
 	return true
 }
@@ -1402,7 +1409,7 @@ func writeFieldList(sb *strings.Builder, fl *ast.FieldList) {
 		if i > 0 {
 			sb.WriteString(", ")
 		}
-		sb.WriteString(fmt.Sprintf("%T", field.Type))
+		fmt.Fprintf(sb, "%T", field.Type)
 	}
 }
 
@@ -1492,7 +1499,7 @@ func (s *Service) GenerateSecurityAudit(ctx context.Context, path string) (*Secu
 	var raw gosecAuditOutput
 	_ = json.Unmarshal(stdout.Bytes(), &raw)
 
-	var auditFindings []domainanalysis.SecurityAuditFinding
+	auditFindings := make([]domainanalysis.SecurityAuditFinding, 0, len(raw.Issues))
 	summaryByOWASP := map[string]int{}
 
 	for _, issue := range raw.Issues {
@@ -1812,7 +1819,7 @@ func detectPatterns(imports map[string]bool, patterns map[string]string) []strin
 			}
 		}
 	}
-	var result []string
+	result := make([]string, 0, len(found))
 	for label := range found {
 		result = append(result, label)
 	}
@@ -1895,7 +1902,7 @@ func (s *Service) GenerateKnowledgeGraph(ctx context.Context, path, format strin
 		}
 	}
 
-	var nodeList []domainanalysis.GraphNode
+	nodeList := make([]domainanalysis.GraphNode, 0, len(nodes))
 	for imp := range nodes {
 		label := strings.TrimPrefix(imp, moduleName+"/")
 		nodeList = append(nodeList, domainanalysis.GraphNode{ID: imp, Label: label})
@@ -2012,7 +2019,7 @@ func (s *Service) GenerateCallGraph(ctx context.Context, path, packagePattern, f
 		name   string
 		degree int
 	}
-	var nodeEdges []nodeEdge
+	nodeEdges := make([]nodeEdge, 0, len(callMap))
 	for name, callees := range callMap {
 		nodeEdges = append(nodeEdges, nodeEdge{name, len(callees)})
 	}
@@ -2025,8 +2032,8 @@ func (s *Service) GenerateCallGraph(ctx context.Context, path, packagePattern, f
 		topSet[ne.name] = true
 	}
 
-	var nodes []domainanalysis.GraphNode
-	var edges []domainanalysis.GraphEdge
+	nodes := make([]domainanalysis.GraphNode, 0, len(topSet))
+	edges := make([]domainanalysis.GraphEdge, 0, len(topSet))
 	for name := range topSet {
 		nodes = append(nodes, domainanalysis.GraphNode{ID: name, Label: name})
 		for callee := range callMap[name] {
@@ -2145,7 +2152,7 @@ func (s *Service) AnalyzeImpact(ctx context.Context, path, symbol, packagePath s
 		}
 	}
 
-	var pkgList []string
+	pkgList := make([]string, 0, len(affectedPkgs))
 	for pkg := range affectedPkgs {
 		pkgList = append(pkgList, pkg)
 	}
