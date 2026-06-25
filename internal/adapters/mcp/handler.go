@@ -10,12 +10,14 @@ import (
 	"github.com/mark3labs/mcp-go/mcp"
 
 	appanalysis "github.com/vinaycharlie01/mcp-golangci-lint/internal/application/analysis"
+	intelligence "github.com/vinaycharlie01/mcp-golangci-lint/internal/application/intelligence"
 )
 
 // Handler implements all MCP tool handler functions.
 // No logger is stored – package-level slog is used after bootstrap sets the default.
 type Handler struct {
-	analysisSvc *appanalysis.Service
+	analysisSvc     *appanalysis.Service
+	intelligenceSvc *intelligence.Service
 }
 
 const defaultTimeoutSecs = 300

@@ -11,6 +11,7 @@ import (
 	"github.com/mark3labs/mcp-go/server"
 
 	appanalysis "github.com/vinaycharlie01/mcp-golangci-lint/internal/application/analysis"
+	intelligence "github.com/vinaycharlie01/mcp-golangci-lint/internal/application/intelligence"
 	"github.com/vinaycharlie01/mcp-golangci-lint/internal/infrastructure/config"
 )
 
@@ -22,8 +23,8 @@ type Server struct {
 	cfg     *config.MCPConfig
 }
 
-// NewServer creates and configures the MCP server with all 7 tools registered.
-func NewServer(cfg *config.MCPConfig, analysisSvc *appanalysis.Service) *Server {
+// NewServer creates and configures the MCP server with all 25 tools registered.
+func NewServer(cfg *config.MCPConfig, analysisSvc *appanalysis.Service, intelligenceSvc *intelligence.Service) *Server {
 	s := server.NewMCPServer(
 		cfg.Name,
 		cfg.Version,
@@ -31,7 +32,7 @@ func NewServer(cfg *config.MCPConfig, analysisSvc *appanalysis.Service) *Server 
 		server.WithRecovery(),
 	)
 
-	h := &Handler{analysisSvc: analysisSvc}
+	h := &Handler{analysisSvc: analysisSvc, intelligenceSvc: intelligenceSvc}
 	registerTools(s, h)
 
 	return &Server{mcp: s, handler: h, cfg: cfg}
@@ -58,8 +59,9 @@ func (s *Server) ServeSSE(_ context.Context) error {
 	return sseServer.Start(addr)
 }
 
-// registerTools registers all 7 MCP tools onto the server.
+// registerTools registers all 25 MCP tools onto the server.
 func registerTools(s *server.MCPServer, h *Handler) {
+	// Original 7 tools
 	s.AddTool(toolAnalyzeRepository(), h.AnalyzeRepository)
 	s.AddTool(toolAnalyzeFile(), h.AnalyzeFile)
 	s.AddTool(toolRunGolangCILint(), h.RunGolangCILint)
@@ -67,6 +69,26 @@ func registerTools(s *server.MCPServer, h *Handler) {
 	s.AddTool(toolExplainFinding(), h.ExplainFinding)
 	s.AddTool(toolSuggestFix(), h.SuggestFix)
 	s.AddTool(toolGenerateGolangCIConfig(), h.GenerateGolangCIConfig)
+
+	// 18 new intelligence tools
+	s.AddTool(toolReviewRepository(), h.ReviewRepository)
+	s.AddTool(toolAnalyzeGitDiff(), h.AnalyzeGitDiff)
+	s.AddTool(toolReviewPullRequest(), h.ReviewPullRequest)
+	s.AddTool(toolGenerateFixPatches(), h.GenerateFixPatches)
+	s.AddTool(toolScanDependencyHealth(), h.ScanDependencyHealth)
+	s.AddTool(toolDetectArchitecturalSmells(), h.DetectArchitecturalSmells)
+	s.AddTool(toolGenerateComplexityReport(), h.GenerateComplexityReport)
+	s.AddTool(toolFindDeadCode(), h.FindDeadCode)
+	s.AddTool(toolDetectPerformanceIssues(), h.DetectPerformanceIssues)
+	s.AddTool(toolDetectConcurrencyIssues(), h.DetectConcurrencyIssues)
+	s.AddTool(toolDetectAPIBreakingChanges(), h.DetectAPIBreakingChanges)
+	s.AddTool(toolGenerateSecurityAudit(), h.GenerateSecurityAudit)
+	s.AddTool(toolGetRepositoryHealthScore(), h.GetRepositoryHealthScore)
+	s.AddTool(toolGetRepositoryFingerprint(), h.GetRepositoryFingerprint)
+	s.AddTool(toolGenerateKnowledgeGraph(), h.GenerateKnowledgeGraph)
+	s.AddTool(toolGenerateCallGraph(), h.GenerateCallGraph)
+	s.AddTool(toolAnalyzeImpact(), h.AnalyzeImpact)
+	s.AddTool(toolAskRepository(), h.AskRepository)
 }
 
 // --- Tool definitions ---
