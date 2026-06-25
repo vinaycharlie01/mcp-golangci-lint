@@ -15,6 +15,7 @@ import (
 	"github.com/vinaycharlie01/mcp-golangci-lint/internal/adapters/observability"
 	"github.com/vinaycharlie01/mcp-golangci-lint/internal/adapters/reporters"
 	appanalysis "github.com/vinaycharlie01/mcp-golangci-lint/internal/application/analysis"
+	intelligence "github.com/vinaycharlie01/mcp-golangci-lint/internal/application/intelligence"
 	"github.com/vinaycharlie01/mcp-golangci-lint/internal/infrastructure/config"
 	"github.com/vinaycharlie01/mcp-golangci-lint/internal/infrastructure/server"
 )
@@ -62,8 +63,11 @@ func Build(ctx context.Context, cfg *config.Config) (*App, error) {
 		slog.Int("count", len(svc.ListAnalyzers())),
 	)
 
+	// Intelligence service
+	intelligenceSvc := intelligence.New(svc)
+
 	// MCP server
-	mcpSrv := mcpadapter.NewServer(&cfg.MCP, svc)
+	mcpSrv := mcpadapter.NewServer(&cfg.MCP, svc, intelligenceSvc)
 
 	// HTTP server for health/metrics
 	httpSrv := server.NewHTTPServer(&cfg.Server, metrics.Handler())
