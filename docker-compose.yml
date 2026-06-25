@@ -1,0 +1,67 @@
+version: "3.9"
+
+services:
+  mcp-server:
+    build:
+      context: .
+      args:
+        VERSION: dev
+        COMMIT: local
+        BUILD_DATE: "2026-06-24"
+    image: mcp-golangci-lint:dev
+    container_name: mcp-golangci-lint
+    restart: unless-stopped
+    environment:
+      MCP_TRANSPORT: sse
+      MCP_LOG_LEVEL: info
+      MCP_LOG_FORMAT: json
+      MCP_OBSERVABILITY_TRACING_ENABLED: "false"
+      MCP_OBSERVABILITY_SERVICE_NAME: mcp-golangci-lint
+    ports:
+      - "8080:8080"  # health/metrics
+      - "8081:8081"  # MCP SSE
+    volumes:
+      - /tmp/go-analysis:/workspace:ro
+    networks:
+      - mcp-net
+
+  prometheus:
+    image: prom/prometheus:v3.4.1
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./deploy/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    networks:
+      - mcp-net
+    profiles: ["observability"]
+
+  grafana:
+    image: grafana/grafana:12.0.1
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    ports:
+      - "3000:3000"
+    networks:
+      - mcp-net
+    profiles: ["observability"]
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.57
+    container_name: jaeger
+    restart: unless-stopped
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports:
+      - "16686:16686"   # UI
+      - "4318:4318"     # OTLP HTTP
+    networks:
+      - mcp-net
+    profiles: ["observability"]
+
+networks:
+  mcp-net:
+    driver: bridge

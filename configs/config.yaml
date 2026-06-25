@@ -1,0 +1,21 @@
+log:
+  level: info
+  format: json
+
+server:
+  addr: "0.0.0.0:8080"
+
+mcp:
+  name: go-static-analysis
+  version: "1.0.0"
+  transport: stdio
+  sse_addr: "0.0.0.0:8081"
+
+observability:
+  service_name: mcp-golangci-lint
+  tracing_enabled: false
+  otlp_endpoint: "localhost:4318"
+  sampling_rate: 1.0
+
+cache:
+  enabled: true
