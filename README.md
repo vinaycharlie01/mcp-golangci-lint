@@ -35,8 +35,8 @@ docker compose up
 ```bash
 git clone https://github.com/vinaycharlie01/mcp-golangci-lint
 cd mcp-golangci-lint
-make build
-./bin/mcp-golangci-lint --transport stdio
+mage build
+./dist/mcp-golangci-lint --transport stdio
 ```
 
 **Prerequisites**: Go 1.25+, `golangci-lint`, `staticcheck`, `gosec` in `$PATH`.
@@ -115,12 +115,12 @@ See [docs/mcp-clients.md](docs/mcp-clients.md) for full configuration options.
 ## Development
 
 ```bash
-make test          # run tests with race detector
-make lint          # run golangci-lint
-make build         # build binary with version injection
-make run-stdio     # run in stdio mode
-make run-sse       # run SSE server on :8081
-make docker-build  # build Docker image
+mage test          # run tests with race detector
+mage lint          # run golangci-lint
+mage build         # build binary with version injection
+mage race          # run tests with race detector
+mage coverage      # generate coverage report
+mage bench         # run benchmarks
 ```
 
 ## Architecture
