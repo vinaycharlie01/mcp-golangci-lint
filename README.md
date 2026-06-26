@@ -35,8 +35,8 @@ docker compose up
 ```bash
 git clone https://github.com/vinaycharlie01/mcp-golangci-lint
 cd mcp-golangci-lint
-make build
-./bin/mcp-golangci-lint --transport stdio
+mage build
+./dist/mcp-golangci-lint --transport stdio
 ```
 
 **Prerequisites**: Go 1.25+, `golangci-lint`, `staticcheck`, `gosec` in `$PATH`.
